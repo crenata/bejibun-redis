@@ -4,7 +4,7 @@
     "": {
       "name": "@bejibun/redis",
       "dependencies": {
-        "@bejibun/core": "^0.1.20",
+        "@bejibun/core": "^0.1.21",
       },
       "devDependencies": {
         "@types/bun": "latest",
@@ -17,7 +17,7 @@
     },
   },
   "packages": {
-    "@bejibun/core": ["@bejibun/core@0.1.20", "", { "peerDependencies": { "typescript": "^5" } }, "sha512-7JMLA64cBKt6oaEJjJ7UVUBAEb8cruf00pM72KdEiaEegqIbWRkd+63crWWbxQ4bvG4ZKHM9LLN0CNC519E0BQ=="],
+    "@bejibun/core": ["@bejibun/core@0.1.21", "", { "peerDependencies": { "typescript": "^5" } }, "sha512-XhHEkolkynRuquYuDBUEqVH0ciZSe0BTTM+cnE0Snz2tl/JNjkwEJkCnRyjw5imqZTY8jq+kGFhJvE3NR5CEFw=="],
 
     "@nodelib/fs.scandir": ["@nodelib/fs.scandir@2.1.5", "", { "dependencies": { "@nodelib/fs.stat": "2.0.5", "run-parallel": "^1.1.9" } }, "sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g=="],
 

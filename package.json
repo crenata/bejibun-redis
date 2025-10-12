@@ -1,6 +1,6 @@
 {
     "name": "@bejibun/redis",
-    "version": "0.1.11",
+    "version": "0.1.12",
     "description": "Redis for Bejibun Framework",
     "keywords": [
         "bun",
@@ -37,7 +37,7 @@
         "build": "bun run clean && tsc -p tsconfig.json && tsc-alias -p tsconfig.json"
     },
     "dependencies": {
-        "@bejibun/core": "^0.1.20"
+        "@bejibun/core": "^0.1.21"
     },
     "devDependencies": {
         "@types/bun": "latest",
