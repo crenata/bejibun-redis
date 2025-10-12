@@ -1,11 +1,51 @@
 {
-  "name": "@bejibun/redis",
-  "module": "index.ts",
-  "type": "module",
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  }
+    "name": "@bejibun/redis",
+    "version": "0.1.0",
+    "description": "Redis for Bejibun Framework",
+    "keywords": [
+        "bun",
+        "bun framework",
+        "redis",
+        "bejibun",
+        "typescript"
+    ],
+    "homepage": "https://github.com/crenata/bejibun-redis#readme",
+    "bugs": {
+        "url": "https://github.com/crenata/bejibun-redis/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/crenata/bejibun-redis.git"
+    },
+    "license": "MIT",
+    "author": "Havea Crenata <havea.crenata@gmail.com>",
+    "type": "module",
+    "main": "./dist/index.js",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        },
+        "./*": "./dist/*"
+    },
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "clean": "rm -rf dist",
+        "build": "bun run clean && tsc -p tsconfig.json && tsc-alias -p tsconfig.json"
+    },
+    "dependencies": {
+        "@bejibun/core": "^0.1.18"
+    },
+    "devDependencies": {
+        "@types/bun": "latest",
+        "tsc-alias": "^1.8.16",
+        "typescript": "^5.9.3"
+    },
+    "peerDependencies": {
+        "typescript": "^5"
+    }
 }

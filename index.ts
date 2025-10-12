@@ -1,1 +1,3 @@
-console.log("Hello via Bun!");
+import Redis from "@/Redis";
+
+export default Redis;
