@@ -1,3 +1,3 @@
-import Redis from "@/facades/Redis";
+export {default} from "@/facades/Redis";
 
-export default Redis;
+export * from "@/types/index";

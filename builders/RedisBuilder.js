@@ -1,0 +1,199 @@
+import { defineValue, isEmpty, isNotEmpty } from "@bejibun/core";
+import { RedisClient } from "bun";
+import { EventEmitter } from "events";
+import config from "../config/redis";
+import RedisException from "../exceptions/RedisException";
+export default class RedisBuilder {
+    static clients = {};
+    static emitter = new EventEmitter();
+    static connection(name) {
+        return {
+            del: (key) => this.del(key, name),
+            get: (key) => this.get(key, name),
+            pipeline: (fn) => this.pipeline(fn, name),
+            publish: (channel, message) => this.publish(channel, message, name),
+            set: (key, value, ttl) => this.set(key, value, ttl, name),
+            subscribe: (channel, listener) => this.subscribe(channel, listener, name),
+        };
+    }
+    static async connect(name) {
+        const client = this.getClient(name);
+        await client.connect();
+        console.log(`[Redis]: Connected manually to "${defineValue(name, "default")}" connection.`);
+        this.emitter.emit("connect", defineValue(name, "default"));
+        return client;
+    }
+    static async disconnect(name) {
+        if (isNotEmpty(name)) {
+            const client = this.clients[name];
+            if (isNotEmpty(client)) {
+                await client.close();
+                delete this.clients[name];
+                console.log(`[Redis]: Disconnected manually from "${name}" connection.`);
+            }
+        }
+        else {
+            for (const [connectionName, client] of Object.entries(this.clients)) {
+                await client.close();
+                console.log(`[Redis]: Disconnected manually from "${connectionName}" connection.`);
+            }
+            this.clients = {};
+        }
+    }
+    static async get(key, connection) {
+        const response = await this.getClient(connection).get(key);
+        return this.deserialize(response);
+    }
+    static async set(key, value, ttl, connection) {
+        const client = this.getClient(connection);
+        const serialized = this.serialize(value);
+        if (ttl)
+            return await client.expire(key, ttl);
+        return await client.set(key, serialized);
+    }
+    static async del(key, connection) {
+        return await this.getClient(connection).del(key);
+    }
+    static async publish(channel, message, connection) {
+        const serialized = this.serialize(message);
+        return await this.getClient(connection).publish(channel, serialized);
+    }
+    static async subscribe(channel, listener, connection) {
+        const cfg = this.getConfig(connection);
+        const client = this.createClient(config.default, cfg);
+        this.clients[channel] = client;
+        await client.subscribe(channel, (message, channel) => listener(this.deserialize(message), channel));
+        console.log(`[Redis]: Subscribed to "${channel}" channel.`);
+        const unsubscribe = async () => {
+            await client.unsubscribe(channel);
+            console.log(`[Redis]: Unsubscribed from "${channel}" channel.`);
+            await client.close();
+            return true;
+        };
+        return {
+            client,
+            unsubscribe: unsubscribe
+        };
+    }
+    static async pipeline(fn, connection) {
+        const client = this.getClient(connection);
+        const ops = [];
+        const pipe = {
+            del: (key) => {
+                ops.push(client.del(key));
+            },
+            get: (key) => {
+                ops.push(client.get(key));
+            },
+            set: (key, value, ttl) => {
+                const serialized = this.serialize(value);
+                if (isNotEmpty(ttl))
+                    ops.push(client.expire(key, ttl));
+                ops.push(client.set(key, serialized));
+            }
+        };
+        fn(pipe);
+        const results = await Promise.all(ops);
+        return results.map((result) => this.deserialize(result));
+    }
+    static on(event, listener) {
+        this.emitter.on(event, listener);
+    }
+    static off(event, listener) {
+        this.emitter.off(event, listener);
+    }
+    static buildUrl(cfg) {
+        const url = new URL(`redis://${cfg.host}:${cfg.port}`);
+        if (isNotEmpty(cfg.password))
+            url.password = cfg.password;
+        if (isNotEmpty(cfg.database))
+            url.pathname = `/${cfg.database}`;
+        return url.toString();
+    }
+    static createClient(name, cfg) {
+        const url = this.buildUrl(cfg);
+        const client = new RedisClient(url, this.getOptions(cfg));
+        client.onconnect = () => {
+            console.log(`[Redis]: Connected to "${name}" connection.`);
+            this.emitter.emit("connect", name);
+        };
+        client.onclose = (error) => {
+            console.warn(`[Redis]: Disconnected from "${name}" connection.`, error.message);
+            this.emitter.emit("disconnect", name, error);
+        };
+        return client;
+    }
+    static getOptions(cfg) {
+        return {
+            autoReconnect: true,
+            maxRetries: cfg.maxRetries
+        };
+    }
+    static getConfig(name) {
+        const connectionName = defineValue(name, config.default);
+        const connection = config.connections[connectionName];
+        if (isEmpty(connection))
+            throw new RedisException(`[Redis]: Connection "${connectionName}" not found.`);
+        return connection;
+    }
+    static getClient(name) {
+        const connectionName = defineValue(name, config.default);
+        this.ensureExitHooks();
+        if (isEmpty(this.clients[connectionName])) {
+            const cfg = this.getConfig(connectionName);
+            this.clients[connectionName] = this.createClient(connectionName, cfg);
+        }
+        return this.clients[connectionName];
+    }
+    static serialize(value) {
+        if (isEmpty(value))
+            return "";
+        if (typeof value === "object")
+            return JSON.stringify(value);
+        if (typeof value === "number" || typeof value === "boolean")
+            return String(value);
+        return value;
+    }
+    static deserialize(value) {
+        if (isEmpty(value))
+            return null;
+        try {
+            return JSON.parse(value);
+        }
+        catch (error) {
+            return value;
+        }
+    }
+    static ensureExitHooks() {
+        this.setupExitHooks();
+    }
+    static setupExitHooks = (() => {
+        let initialized = false;
+        return () => {
+            if (initialized)
+                return;
+            initialized = true;
+            const handleExit = async (signal) => {
+                try {
+                    await RedisBuilder.disconnect();
+                    console.log(`[Redis]: Disconnected on "${defineValue(signal, "exit")}".`);
+                }
+                catch (error) {
+                    console.error("[Redis]: Error during disconnect.", error.message);
+                }
+                finally {
+                    process.exit(0);
+                }
+            };
+            process.on("exit", async () => {
+                await handleExit();
+            });
+            process.on("SIGINT", async () => {
+                await handleExit("SIGINT");
+            });
+            process.on("SIGTERM", async () => {
+                await handleExit("SIGTERM");
+            });
+        };
+    })();
+}

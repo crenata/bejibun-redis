@@ -1,7 +1,9 @@
+import type {RedisConfig, RedisPipeline, RedisSubscribe} from "@/types/redis";
 import {defineValue, isEmpty, isNotEmpty} from "@bejibun/core";
 import {RedisClient, RedisOptions} from "bun";
 import {EventEmitter} from "events";
 import config from "@/config/redis";
+import RedisException from "@/exceptions/RedisException";
 
 export default class RedisBuilder {
     private static clients: Record<string, RedisClient> = {};

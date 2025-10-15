@@ -1,3 +1,4 @@
+import type {RedisPipeline, RedisSubscribe} from "@/types/redis";
 import {RedisClient} from "bun";
 import RedisBuilder from "@/builders/RedisBuilder";
 

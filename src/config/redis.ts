@@ -1,13 +1,13 @@
 const config: Record<string, any> = {
-    default: process.env.REDIS_CONNECTION,
+    default: "local",
 
     connections: {
         local: {
-            host: process.env.REDIS_HOST,
-            port: process.env.REDIS_PORT,
-            password: process.env.REDIS_PASSWORD,
-            database: process.env.REDIS_DATABASE,
-            maxRetries: Number(process.env.REDIS_MAX_RETRIES)
+            host: "127.0.0.1",
+            port: 6379,
+            password: "",
+            database: 0,
+            maxRetries: 10
         }
     }
 };
