@@ -1,6 +1,6 @@
 {
     "name": "@bejibun/redis",
-    "version": "0.1.21",
+    "version": "0.1.22",
     "author": "Havea Crenata <havea.crenata@gmail.com>",
     "repository": {
         "type": "git",
@@ -8,9 +8,6 @@
     },
     "main": "index.js",
     "module": "index.js",
-    "dependencies": {
-        "@bejibun/core": "^0.1.33"
-    },
     "devDependencies": {
         "@types/bun": "latest",
         "tsc-alias": "^1.8.16"
@@ -33,9 +30,12 @@
         "copy": "cp -rf src/types dist",
         "rsync": "rsync -a dist/ ./",
         "clean": "rm -rf dist",
-        "build": "bunx tsc -p tsconfig.json && bun run alias && bun run copy && bun run rsync && bun run clean",
+        "build": "bunx tsc -p tsconfig.json && bun run copy && bun run alias && bun run rsync && bun run clean",
         "deploy": "bun run build && npm publish --access public"
     },
     "type": "module",
-    "types": "index.d.ts"
+    "types": "index.d.ts",
+    "dependencies": {
+        "@bejibun/core": "^0.1.35"
+    }
 }

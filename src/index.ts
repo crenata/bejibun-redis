@@ -1,3 +1,5 @@
 export {default} from "@/facades/Redis";
 
-export * from "@/types/index";
+export * from "@/exceptions/index";
+
+export * from "@/facades/index";

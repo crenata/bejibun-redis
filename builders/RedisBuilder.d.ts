@@ -1,4 +1,4 @@
-import type { RedisPipeline, RedisSubscribe } from "@/types/redis";
+import type { RedisPipeline, RedisSubscribe } from "../types/redis";
 import { RedisClient } from "bun";
 export default class RedisBuilder {
     private static clients;
