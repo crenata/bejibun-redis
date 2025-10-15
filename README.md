@@ -24,6 +24,33 @@ bun add @bejibun/redis
 bun ace install @bejibun/redis
 ```
 
+### Configuration
+Add `redis.ts` inside config directory on your project
+
+```bash
+config/redis.ts
+```
+
+```ts
+const config: Record<string, any> = {
+    default: "local",
+
+    connections: {
+        local: {
+            host: "127.0.0.1",
+            port: 6379,
+            password: "",
+            database: 0,
+            maxRetries: 10
+        }
+    }
+};
+
+export default config;
+```
+
+You can pass the value with environment variables.
+
 ### How to Use
 How to use tha package.
 
