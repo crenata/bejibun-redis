@@ -1,3 +1,4 @@
+import Logger from "@bejibun/logger";
 import { defineValue, isEmpty, isNotEmpty } from "@bejibun/utils";
 import { RedisClient } from "bun";
 import { EventEmitter } from "events";
@@ -19,7 +20,7 @@ export default class RedisBuilder {
     static async connect(name) {
         const client = this.getClient(name);
         await client.connect();
-        console.log(`[Redis]: Connected manually to "${defineValue(name, "default")}" connection.`);
+        Logger.setContext("Redis").info(`Connected manually to "${defineValue(name, "default")}" connection.`);
         this.emitter.emit("connect", defineValue(name, "default"));
         return client;
     }
@@ -29,13 +30,13 @@ export default class RedisBuilder {
             if (isNotEmpty(client)) {
                 await client.close();
                 delete this.clients[name];
-                console.log(`[Redis]: Disconnected manually from "${name}" connection.`);
+                Logger.setContext("Redis").warn(`Disconnected manually from "${name}" connection.`);
             }
         }
         else {
             for (const [connectionName, client] of Object.entries(this.clients)) {
                 await client.close();
-                console.log(`[Redis]: Disconnected manually from "${connectionName}" connection.`);
+                Logger.setContext("Redis").warn(`Disconnected manually from "${connectionName}" connection.`);
             }
             this.clients = {};
         }
@@ -63,10 +64,10 @@ export default class RedisBuilder {
         const client = this.createClient(config.default, cfg);
         this.clients[channel] = client;
         await client.subscribe(channel, (message, channel) => listener(this.deserialize(message), channel));
-        console.log(`[Redis]: Subscribed to "${channel}" channel.`);
+        Logger.setContext("Redis").info(`Subscribed to "${channel}" channel.`);
         const unsubscribe = async () => {
             await client.unsubscribe(channel);
-            console.log(`[Redis]: Unsubscribed from "${channel}" channel.`);
+            Logger.setContext("Redis").warn(`Unsubscribed from "${channel}" channel.`);
             await client.close();
             return true;
         };
@@ -114,7 +115,7 @@ export default class RedisBuilder {
         const url = this.buildUrl(cfg);
         const client = new RedisClient(url, this.getOptions(cfg));
         client.onconnect = () => {
-            console.log(`[Redis]: Connected to "${name}" connection.`);
+            Logger.setContext("Redis").info(`Connected to "${name}" connection.`);
             this.emitter.emit("connect", name);
         };
         client.onclose = (error) => {
@@ -176,7 +177,7 @@ export default class RedisBuilder {
             const handleExit = async (signal) => {
                 try {
                     await RedisBuilder.disconnect();
-                    console.log(`[Redis]: Disconnected on "${defineValue(signal, "exit")}".`);
+                    Logger.setContext("Redis").warn(`Disconnected on "${defineValue(signal, "exit")}".`);
                 }
                 catch (error) {
                     console.error("[Redis]: Error during disconnect.", error.message);
