@@ -1,5 +1,5 @@
 import type {RedisConfig, RedisPipeline, RedisSubscribe} from "@/types/redis";
-import {defineValue, isEmpty, isNotEmpty} from "@bejibun/core";
+import {defineValue, isEmpty, isNotEmpty} from "@bejibun/utils";
 import {RedisClient, RedisOptions} from "bun";
 import {EventEmitter} from "events";
 import config from "@/config/redis";

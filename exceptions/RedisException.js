@@ -1,4 +1,4 @@
-import { defineValue } from "@bejibun/core";
+import { defineValue } from "@bejibun/utils";
 export default class RedisException extends Error {
     code;
     constructor(message, code) {

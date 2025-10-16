@@ -1,4 +1,4 @@
-import { defineValue, isEmpty, isNotEmpty } from "@bejibun/core";
+import { defineValue, isEmpty, isNotEmpty } from "@bejibun/utils";
 import { RedisClient } from "bun";
 import { EventEmitter } from "events";
 import config from "../config/redis";
