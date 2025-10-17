@@ -3,6 +3,22 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [v0.1.26](https://github.com/crenata/bejibun-redis/compare/v0.1.24...v0.1.26) - 2025-10-18
+
+### 🩹 Fixes
+
+### 📖 Changes
+What's New :
+- A minor adjustment on error logs
+
+### ❤️Contributors
+- Havea Crenata ([@crenata](https://github.com/crenata))
+- Ghulje ([@ghulje](https://github.com/ghulje))
+
+**Full Changelog**: https://github.com/crenata/bejibun-redis/blob/master/CHANGELOG.md
+
+---
+
 ## [v0.1.24](https://github.com/crenata/bejibun-redis/compare/v0.1.23...v0.1.24) - 2025-10-16
 
 ### 🩹 Fixes

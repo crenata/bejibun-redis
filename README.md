@@ -55,14 +55,19 @@ You can pass the value with environment variables.
 How to use tha package.
 
 ```ts
-import Redis from "@bejibun/Redis";
+import type {RedisPipeline} from "@bejibun/redis/types";
+import BaseController from "@bejibun/core/bases/BaseController";
+import Logger from "@bejibun/logger";
+import Redis from "@bejibun/redis";
 import {BunRequest} from "bun";
-import BaseController from "@/app/controllers/BaseController";
 
 export default class TestController extends BaseController {
     public async redis(request: BunRequest): Promise<Response> {
         await Redis.set("redis", {hello: "world"});
         const redis = await Redis.get("redis");
+
+        await Redis.connection("local").set("connection", "This is using custom connection.");
+        const connection = await Redis.connection("local").get("connection");
 
         const pipeline = await Redis.pipeline((pipe: RedisPipeline) => {
             pipe.set("redis-pipeline-1", "This is redis pipeline 1");
@@ -73,14 +78,14 @@ export default class TestController extends BaseController {
         });
 
         const subscriber = await Redis.subscribe("redis-subscribe", (message: string, channel: string) => {
-            console.log(`[${channel}]: ${message}`);
+            Logger.setContext(channel).debug(message);
         });
         await Redis.publish("redis-subscribe", "Hai redis subscriber!");
         setTimeout(async () => {
             await subscriber.unsubscribe();
         }, 500);
 
-        return super.response.setData({redis, pipeline}).send();
+        return super.response.setData({redis, connection, pipeline}).send();
     }
 }
 ```

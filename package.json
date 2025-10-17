@@ -1,6 +1,6 @@
 {
     "name": "@bejibun/redis",
-    "version": "0.1.25",
+    "version": "0.1.26",
     "author": "Havea Crenata <havea.crenata@gmail.com>",
     "repository": {
         "type": "git",
@@ -36,7 +36,7 @@
     "type": "module",
     "types": "index.d.ts",
     "dependencies": {
-        "@bejibun/logger": "^0.1.14",
+        "@bejibun/logger": "^0.1.15",
         "@bejibun/utils": "^0.1.1"
     }
 }

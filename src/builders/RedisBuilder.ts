@@ -150,7 +150,7 @@ export default class RedisBuilder {
         };
 
         client.onclose = (error: Error) => {
-            console.warn(`[Redis]: Disconnected from "${name}" connection.`, error.message);
+            Logger.setContext("Redis").warn(`Disconnected from "${name}" connection.`).trace(error);
             this.emitter.emit("disconnect", name, error);
         };
 
@@ -221,7 +221,7 @@ export default class RedisBuilder {
                     await RedisBuilder.disconnect();
                     Logger.setContext("Redis").warn(`Disconnected on "${defineValue(signal, "exit")}".`);
                 } catch (error: any) {
-                    console.error("[Redis]: Error during disconnect.", error.message);
+                    Logger.setContext("Redis").error("Error during disconnect.").trace(error);
                 } finally {
                     process.exit(0);
                 }
