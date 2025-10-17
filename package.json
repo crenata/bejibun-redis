@@ -36,7 +36,7 @@
     "type": "module",
     "types": "index.d.ts",
     "dependencies": {
-        "@bejibun/logger": "^0.1.13",
-        "@bejibun/utils": "^0.1.0"
+        "@bejibun/logger": "^0.1.14",
+        "@bejibun/utils": "^0.1.1"
     }
 }
