@@ -4,7 +4,7 @@
     "": {
       "name": "@bejibun/redis",
       "dependencies": {
-        "@bejibun/logger": "^0.1.14",
+        "@bejibun/logger": "^0.1.15",
         "@bejibun/utils": "^0.1.1",
       },
       "devDependencies": {
