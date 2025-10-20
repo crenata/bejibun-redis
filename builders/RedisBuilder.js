@@ -1,6 +1,5 @@
 import Logger from "@bejibun/logger";
 import { defineValue, isEmpty, isNotEmpty } from "@bejibun/utils";
-import { RedisClient } from "bun";
 import { EventEmitter } from "events";
 import config from "../config/redis";
 import RedisException from "../exceptions/RedisException";
@@ -48,7 +47,7 @@ export default class RedisBuilder {
     static async set(key, value, ttl, connection) {
         const client = this.getClient(connection);
         const serialized = this.serialize(value);
-        if (ttl)
+        if (isNotEmpty(ttl))
             return await client.expire(key, ttl);
         return await client.set(key, serialized);
     }
@@ -67,8 +66,8 @@ export default class RedisBuilder {
         Logger.setContext("Redis").info(`Subscribed to "${channel}" channel.`);
         const unsubscribe = async () => {
             await client.unsubscribe(channel);
-            Logger.setContext("Redis").warn(`Unsubscribed from "${channel}" channel.`);
             await client.close();
+            Logger.setContext("Redis").warn(`Unsubscribed from "${channel}" channel.`);
             return true;
         };
         return {
@@ -113,7 +112,7 @@ export default class RedisBuilder {
     }
     static createClient(name, cfg) {
         const url = this.buildUrl(cfg);
-        const client = new RedisClient(url, this.getOptions(cfg));
+        const client = new Bun.RedisClient(url, this.getOptions(cfg));
         client.onconnect = () => {
             Logger.setContext("Redis").info(`Connected to "${name}" connection.`);
             this.emitter.emit("connect", name);

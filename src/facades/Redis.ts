@@ -1,5 +1,4 @@
 import type {RedisPipeline, RedisSubscribe} from "@/types/redis";
-import {RedisClient} from "bun";
 import RedisBuilder from "@/builders/RedisBuilder";
 
 export default class Redis {
@@ -7,7 +6,7 @@ export default class Redis {
         return RedisBuilder.connection(name);
     }
 
-    public static async connect(name?: string): Promise<RedisClient> {
+    public static async connect(name?: string): Promise<Bun.RedisClient> {
         return RedisBuilder.connect(name);
     }
 
@@ -15,15 +14,15 @@ export default class Redis {
         return RedisBuilder.disconnect(name);
     }
 
-    public static async get(key: RedisClient.KeyLike, connection?: string): Promise<any> {
+    public static async get(key: Bun.RedisClient.KeyLike, connection?: string): Promise<any> {
         return RedisBuilder.get(key, connection);
     }
 
-    public static async set(key: RedisClient.KeyLike, value: any, ttl?: number, connection?: string): Promise<number | "OK"> {
+    public static async set(key: Bun.RedisClient.KeyLike, value: any, ttl?: number, connection?: string): Promise<number | "OK"> {
         return RedisBuilder.set(key, value, ttl, connection);
     }
 
-    public static async del(key: RedisClient.KeyLike, connection?: string): Promise<number> {
+    public static async del(key: Bun.RedisClient.KeyLike, connection?: string): Promise<number> {
         return RedisBuilder.del(key, connection);
     }
 
@@ -31,7 +30,7 @@ export default class Redis {
         return RedisBuilder.publish(channel, message, connection);
     }
 
-    public static async subscribe(channel: string, listener: RedisClient.StringPubSubListener, connection?: string): Promise<RedisSubscribe> {
+    public static async subscribe(channel: string, listener: Bun.RedisClient.StringPubSubListener, connection?: string): Promise<RedisSubscribe> {
         return RedisBuilder.subscribe(channel, listener, connection);
     }
 

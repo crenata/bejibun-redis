@@ -1,6 +1,6 @@
 {
     "name": "@bejibun/redis",
-    "version": "0.1.26",
+    "version": "0.1.27",
     "author": "Havea Crenata <havea.crenata@gmail.com>",
     "repository": {
         "type": "git",
@@ -31,12 +31,12 @@
         "rsync": "rsync -a dist/ ./",
         "clean": "rm -rf dist",
         "build": "bunx tsc -p tsconfig.json && bun run copy && bun run alias && bun run rsync && bun run clean",
-        "deploy": "bun run build && npm publish --access public"
+        "deploy": "bun run build && bun publish --access public"
     },
     "type": "module",
     "types": "index.d.ts",
     "dependencies": {
-        "@bejibun/logger": "^0.1.15",
-        "@bejibun/utils": "^0.1.1"
+        "@bejibun/logger": "^0.1.18",
+        "@bejibun/utils": "^0.1.14"
     }
 }
