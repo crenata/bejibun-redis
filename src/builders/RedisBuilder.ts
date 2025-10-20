@@ -172,7 +172,7 @@ export default class RedisBuilder {
         const connectionName = defineValue(name, config.default);
         const connection = config.connections[connectionName];
 
-        if (isEmpty(connection)) throw new RedisException(`[Redis]: Connection "${connectionName}" not found.`);
+        if (isEmpty(connection)) throw new RedisException(`Connection "${connectionName}" not found.`);
 
         return connection;
     }
