@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-## [v0.1.27](https://github.com/crenata/bejibun-redis/compare/v0.1.26...v0.1.27) - 2025-10-18
+## [v0.1.27](https://github.com/crenata/bejibun-redis/compare/v0.1.26...v0.1.27) - 2025-10-20
 
 ### 🩹 Fixes
 
