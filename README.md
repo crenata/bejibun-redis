@@ -59,10 +59,9 @@ import type {RedisPipeline} from "@bejibun/redis/types";
 import BaseController from "@bejibun/core/bases/BaseController";
 import Logger from "@bejibun/logger";
 import Redis from "@bejibun/redis";
-import {BunRequest} from "bun";
 
 export default class TestController extends BaseController {
-    public async redis(request: BunRequest): Promise<Response> {
+    public async redis(request: Bun.BunRequest): Promise<Response> {
         await Redis.set("redis", {hello: "world"});
         const redis = await Redis.get("redis");
 
