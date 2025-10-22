@@ -3,6 +3,22 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [v0.1.29](https://github.com/crenata/bejibun-redis/compare/v0.1.27...v0.1.29) - 2025-10-22
+
+### 🩹 Fixes
+
+### 📖 Changes
+What's New :
+- Adding `configure.ts` for installation configuration
+
+### ❤️Contributors
+- Havea Crenata ([@crenata](https://github.com/crenata))
+- Ghulje ([@ghulje](https://github.com/ghulje))
+
+**Full Changelog**: https://github.com/crenata/bejibun-redis/blob/master/CHANGELOG.md
+
+---
+
 ## [v0.1.27](https://github.com/crenata/bejibun-redis/compare/v0.1.26...v0.1.27) - 2025-10-20
 
 ### 🩹 Fixes
