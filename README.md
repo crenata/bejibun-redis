@@ -25,7 +25,11 @@ bun ace install @bejibun/redis
 ```
 
 ### Configuration
-Add `redis.ts` inside config directory on your project
+The configuration file automatically executed if you are using `ace`.
+
+Or
+
+Add `redis.ts` inside config directory on your project if doesn't exist.
 
 ```bash
 config/redis.ts
@@ -100,7 +104,7 @@ If you find this project helpful and want to support it, you can donate via PayP
 
 Or if you are prefer using crypto :
 
-| EVM | Solana |
-| --- | ------ |
+| EVM                                                                                                     | Solana                                                                                                  |
+| ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
 | <img src="https://github.com/crenata/bejibun/blob/master/public/images/EVM.png?raw=true" width="150" /> | <img src="https://github.com/crenata/bejibun/blob/master/public/images/SOL.png?raw=true" width="150" /> |
-| 0xdABe8750061410D35cE52EB2a418c8cB004788B3 | GAnoyvy9p3QFyxikWDh9hA3fmSk2uiPLNWyQ579cckMn |
+| 0xdABe8750061410D35cE52EB2a418c8cB004788B3                                                              | GAnoyvy9p3QFyxikWDh9hA3fmSk2uiPLNWyQ579cckMn                                                            |
