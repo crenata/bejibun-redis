@@ -101,11 +101,7 @@ export default class TestController extends BaseController {
 
 ## ☕ Support / Donate
 
-If you find this project helpful and want to support it, you can donate via PayPal :
-
-[![Donate with PayPal](https://img.shields.io/badge/Donate-PayPal-blue.svg?logo=paypal)](https://paypal.me/hafiizhghulam)
-
-Or if you are prefer using crypto :
+If you find this project helpful and want to support it, you can donate via crypto :
 
 | EVM                                                                                                     | Solana                                                                                                  |
 | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
