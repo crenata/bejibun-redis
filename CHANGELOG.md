@@ -3,6 +3,20 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [v0.1.33](https://github.com/crenata/bejibun-redis/compare/v0.1.30...v0.1.33) - 2025-11-09
+
+### 🩹 Fixes
+- Fix redis configuration
+
+### 📖 Changes
+
+### ❤️Contributors
+- Havea Crenata ([@crenata](https://github.com/crenata))
+
+**Full Changelog**: https://github.com/crenata/bejibun-redis/blob/master/CHANGELOG.md
+
+---
+
 ## [v0.1.30](https://github.com/crenata/bejibun-redis/compare/v0.1.29...v0.1.30) - 2025-10-22
 
 ### 🩹 Fixes

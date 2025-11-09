@@ -1,7 +1,9 @@
+import App from "@bejibun/app";
 import Logger from "@bejibun/logger";
 import { defineValue, isEmpty, isNotEmpty } from "@bejibun/utils";
 import { EventEmitter } from "events";
-import config from "../config/redis";
+import fs from "fs";
+import RedisConf from "../config/redis";
 import RedisException from "../exceptions/RedisException";
 export default class RedisBuilder {
     static clients = {};
@@ -60,7 +62,7 @@ export default class RedisBuilder {
     }
     static async subscribe(channel, listener, connection) {
         const cfg = this.getConfig(connection);
-        const client = this.createClient(config.default, cfg);
+        const client = this.createClient(this.config.default, cfg);
         this.clients[channel] = client;
         await client.subscribe(channel, (message, channel) => listener(this.deserialize(message), channel));
         Logger.setContext("Redis").info(`Subscribed to "${channel}" channel.`);
@@ -102,6 +104,15 @@ export default class RedisBuilder {
     static off(event, listener) {
         this.emitter.off(event, listener);
     }
+    static get config() {
+        let config;
+        const configPath = App.Path.configPath("redis.ts");
+        if (fs.existsSync(configPath))
+            config = require(configPath).default;
+        else
+            config = RedisConf;
+        return config;
+    }
     static buildUrl(cfg) {
         const url = new URL(`redis://${cfg.host}:${cfg.port}`);
         if (isNotEmpty(cfg.password))
@@ -130,14 +141,14 @@ export default class RedisBuilder {
         };
     }
     static getConfig(name) {
-        const connectionName = defineValue(name, config.default);
-        const connection = config.connections[connectionName];
+        const connectionName = defineValue(name, this.config.default);
+        const connection = this.config.connections[connectionName];
         if (isEmpty(connection))
             throw new RedisException(`Connection "${connectionName}" not found.`);
         return connection;
     }
     static getClient(name) {
-        const connectionName = defineValue(name, config.default);
+        const connectionName = defineValue(name, this.config.default);
         this.ensureExitHooks();
         if (isEmpty(this.clients[connectionName])) {
             const cfg = this.getConfig(connectionName);

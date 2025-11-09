@@ -13,6 +13,7 @@ export default class RedisBuilder {
     static pipeline(fn: (pipe: RedisPipeline) => void, connection?: string): Promise<any[]>;
     static on(event: "connect" | "disconnect" | "error", listener: (...args: Array<any>) => void): void;
     static off(event: "connect" | "disconnect" | "error", listener: (...args: Array<any>) => void): void;
+    private static get config();
     private static buildUrl;
     private static createClient;
     private static getOptions;

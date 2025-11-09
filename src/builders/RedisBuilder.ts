@@ -1,8 +1,10 @@
 import type {RedisConfig, RedisPipeline, RedisSubscribe} from "@/types/redis";
+import App from "@bejibun/app";
 import Logger from "@bejibun/logger";
 import {defineValue, isEmpty, isNotEmpty} from "@bejibun/utils";
 import {EventEmitter} from "events";
-import config from "@/config/redis";
+import fs from "fs";
+import RedisConf from "@/config/redis";
 import RedisException from "@/exceptions/RedisException";
 
 export default class RedisBuilder {
@@ -78,7 +80,7 @@ export default class RedisBuilder {
 
     public static async subscribe(channel: string, listener: Bun.RedisClient.StringPubSubListener, connection?: string): Promise<RedisSubscribe> {
         const cfg = this.getConfig(connection);
-        const client = this.createClient(config.default, cfg);
+        const client = this.createClient(this.config.default, cfg);
         this.clients[channel] = client;
 
         await client.subscribe(channel, (message: string, channel: string) => listener(this.deserialize(message), channel));
@@ -135,6 +137,17 @@ export default class RedisBuilder {
         this.emitter.off(event, listener);
     }
 
+    private static get config(): Record<string, any> {
+        let config: any;
+
+        const configPath = App.Path.configPath("redis.ts");
+
+        if (fs.existsSync(configPath)) config = require(configPath).default;
+        else config = RedisConf;
+
+        return config;
+    }
+
     private static buildUrl(cfg: RedisConfig): string {
         const url = new URL(`redis://${cfg.host}:${cfg.port}`);
 
@@ -169,8 +182,8 @@ export default class RedisBuilder {
     }
 
     private static getConfig(name?: string): RedisConfig {
-        const connectionName = defineValue(name, config.default);
-        const connection = config.connections[connectionName];
+        const connectionName = defineValue(name, this.config.default);
+        const connection = this.config.connections[connectionName];
 
         if (isEmpty(connection)) throw new RedisException(`Connection "${connectionName}" not found.`);
 
@@ -178,7 +191,7 @@ export default class RedisBuilder {
     }
 
     private static getClient(name?: string): Bun.RedisClient {
-        const connectionName = defineValue(name, config.default);
+        const connectionName = defineValue(name, this.config.default);
 
         this.ensureExitHooks();
 
