@@ -49,9 +49,10 @@ export default class RedisBuilder {
     static async set(key, value, ttl, connection) {
         const client = this.getClient(connection);
         const serialized = this.serialize(value);
+        const data = await client.set(key, serialized);
         if (isNotEmpty(ttl))
             return await client.expire(key, ttl);
-        return await client.set(key, serialized);
+        return data;
     }
     static async del(key, connection) {
         return await this.getClient(connection).del(key);
@@ -89,9 +90,10 @@ export default class RedisBuilder {
             },
             set: (key, value, ttl) => {
                 const serialized = this.serialize(value);
+                const data = client.set(key, serialized);
                 if (isNotEmpty(ttl))
                     ops.push(client.expire(key, ttl));
-                ops.push(client.set(key, serialized));
+                ops.push(data);
             }
         };
         fn(pipe);

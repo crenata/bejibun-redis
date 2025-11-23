@@ -63,9 +63,11 @@ export default class RedisBuilder {
         const client = this.getClient(connection);
         const serialized = this.serialize(value);
 
+        const data = await client.set(key, serialized);
+
         if (isNotEmpty(ttl)) return await client.expire(key, ttl as number);
 
-        return await client.set(key, serialized);
+        return data;
     }
 
     public static async del(key: Bun.RedisClient.KeyLike, connection?: string): Promise<number> {
@@ -116,9 +118,11 @@ export default class RedisBuilder {
             set: (key: Bun.RedisClient.KeyLike, value: any, ttl?: number): void => {
                 const serialized = this.serialize(value);
 
+                const data = client.set(key, serialized);
+
                 if (isNotEmpty(ttl)) ops.push(client.expire(key, ttl as number));
 
-                ops.push(client.set(key, serialized));
+                ops.push(data);
             }
         };
 
